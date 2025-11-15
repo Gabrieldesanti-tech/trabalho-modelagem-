@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Vilões da Disney - Métodos Numéricos</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(180deg, #2E003E, #0A0A0A);
+        font-family: "Cinzel", serif; 
+        color: #EEE;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 42px;
+        color: #3EF03E;
+        text-shadow: 0 0 15px #3EF03E;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .caixa {
+        background: rgba(20, 0, 30, 0.8);
+        border: 2px solid #6A0DAD;
+        padding: 20px;
+        border-radius: 15px;
+        width: 380px;
+        box-shadow: 0 0 25px #6A0DAD;
+        backdrop-filter: blur(6px);
+    }
+
+    label {
+        font-size: 15px;
+        margin-top: 10px;
+        color: #EEE;
+        display: block;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        background: #1b0027;
+        color: #EEE;
+        border: 1px solid #6A0DAD;
+        box-sizing: border-box;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        outline: none;
+        box-shadow: 0 0 10px #3EF03E;
+        border-color: #3EF03E;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #6A0DAD;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        transition: 0.2s;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #3EF03E;
+        color: black;
+        box-shadow: 0 0 20px #3EF03E;
+    }
+
+    h2 {
+        margin-top: 30px;
+        text-shadow: 0 0 10px #D60000;
+    }
+
+    pre {
+        width: 380px;
+        background: #0A0A0A;
+        padding: 15px;
+        color: #3EF03E;
+        border-radius: 10px;
+        border: 1px solid #6A0DAD;
+        box-shadow: 0 0 15px #6A0DAD;
+        max-height: 300px;
+        overflow-y: auto;
+        font-size: 14px;
+        white-space: pre-wrap;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>Vilões da Disney<br>Métodos Numéricos</h1>
+
+<div class="caixa">
+
+    <!-- Escolha do método -->
+    <label>Método:</label>
+    <select id="metodo" onchange="atualizarCampos()">
+        <option value="newton">Newton-Raphson</option>
+        <option value="bissecao">Bisseção</option>
+        <option value="gauss">Eliminação de Gauss</option>
+    </select>
+
+    <!-- Campos comuns / específicos -->
+
+    <div id="campo-funcao">
+        <label>Função f(x):</label>
+        <input id="funcao" placeholder="ex: exp(-x) - x">
+    </div>
+
+    <div id="campo-x0">
+        <label>Valor inicial x0:</label>
+        <input id="x0" type="number" step="any" value="1">
+    </div>
+
+    <div id="campo-a">
+        <label>Limite inferior a:</label>
+        <input id="a" type="number" step="any" value="0">
+    </div>
+
+    <div id="campo-b">
+        <label>Limite superior b:</label>
+        <input id="b" type="number" step="any" value="1">
+    </div>
+
+    <div id="campo-matriz">
+        <label>Matriz aumentada [A|b]:</label>
+        <textarea id="matriz" placeholder="Exemplo para 2 equações:
+2 3 8
+1 -1 0"></textarea>
+    </div>
+
+    <label>Tolerância:</label>
+    <input id="tolerancia" type="number" step="any" value="0.0001">
+
+    <label>Máx. iterações:</label>
+    <input id="max_iter" type="number" value="10">
+
+    <button onclick="calcular()">Invocar o Feitiço</button>
+</div>
+
+<h2>Resultado da Magia</h2>
+<pre id="resultado">Ainda nada conjurado...</pre>
+
+<script>
+function atualizarCampos() {
+    const metodo = document.getElementById("metodo").value;
+
+    // Mostra/esconde campos conforme o método
+    const campoFuncao = document.getElementById("campo-funcao");
+    const campoX0 = document.getElementById("campo-x0");
+    const campoA = document.getElementById("campo-a");
+    const campoB = document.getElementById("campo-b");
+    const campoMatriz = document.getElementById("campo-matriz");
+    const campoTol = document.getElementById("tolerancia");
+    const campoMaxIter = document.getElementById("max_iter");
+
+    if (metodo === "newton") {
+        campoFuncao.style.display = "block";
+        campoX0.style.display = "block";
+        campoA.style.display = "none";
+        campoB.style.display = "none";
+        campoMatriz.style.display = "none";
+        campoTol.disabled = false;
+        campoMaxIter.disabled = false;
+    } else if (metodo === "bissecao") {
+        campoFuncao.style.display = "block";
+        campoX0.style.display = "none";
+        campoA.style.display = "block";
+        campoB.style.display = "block";
+        campoMatriz.style.display = "none";
+        campoTol.disabled = false;
+        campoMaxIter.disabled = false;
+    } else if (metodo === "gauss") {
+        campoFuncao.style.display = "none";
+        campoX0.style.display = "none";
+        campoA.style.display = "none";
+        campoB.style.display = "none";
+        campoMatriz.style.display = "block";
+        // Tolerância e max_iter não são usados diretamente em Gauss,
+        // então podemos desativar se quiser:
+        campoTol.disabled = true;
+        campoMaxIter.disabled = true;
+    }
+}
+
+// já configura a tela inicial
+atualizarCampos();
+
+async function calcular() {
+    const metodo = document.getElementById("metodo").value;
+    const resultadoEl = document.getElementById("resultado");
+    let url = "";
+    let payload = {};
+
+    if (metodo === "newton") {
+        url = "http://127.0.0.1:5000/newton";
+        payload = {
+            funcao: document.getElementById("funcao").value,
+            x0: parseFloat(document.getElementById("x0").value),
+            tolerancia: parseFloat(document.getElementById("tolerancia").value),
+            max_iter: parseInt(document.getElementById("max_iter").value)
+        };
+    } else if (metodo === "bissecao") {
+        url = "http://127.0.0.1:5000/bissecao";
+        payload = {
+            funcao: document.getElementById("funcao").value,
+            a: parseFloat(document.getElementById("a").value),
+            b: parseFloat(document.getElementById("b").value),
+            tolerancia: parseFloat(document.getElementById("tolerancia").value),
+            max_iter: parseInt(document.getElementById("max_iter").value)
+        };
+    } else if (metodo === "gauss") {
+        url = "http://127.0.0.1:5000/gauss";
+
+        // lê a matriz digitada
+        const textoMatriz = document.getElementById("matriz").value.trim();
+        const linhas = textoMatriz.split("\n").filter(l => l.trim().length > 0);
+
+        const matriz = linhas.map(linha => {
+            return linha.trim().split(/\s+/).map(Number);
+        });
+
+        payload = {
+            matriz: matriz,
+            usar_pivoteamento: true
+        };
+    }
+
+    try {
+        const resposta = await fetch(url, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+
+        const dados = await resposta.json();
+        resultadoEl.textContent = JSON.stringify(dados, null, 2);
+    } catch (erro) {
+        resultadoEl.textContent =
+            "⚠ O feitiço falhou ao se comunicar com o caldeirão (backend):\n" + erro;
+    }
+}
+</script>
+
+</body>
+</html>
