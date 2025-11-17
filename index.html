@@ -1,439 +1,444 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html> <!-- Define que o documento é HTML5 -->
+<html lang="pt-BR"> <!-- Língua da página: português do Brasil (ajuda em acessibilidade e SEO) -->
 <head>
-<meta charset="UTF-8">
-<title>Gargamel & Bruxa do Valente - Métodos Numéricos</title>
+<meta charset="UTF-8"> <!-- Usa codificação UTF-8 para acentos funcionarem corretamente -->
+<title>Gargamel & Bruxa do Valente - Métodos Numéricos</title> <!-- Título que aparece na aba do navegador -->
 
 <style>
     body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(180deg, #2E003E, #0A0A0A);
-        font-family: "Cinzel", serif; 
-        color: #EEE;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px;
-        transition: background 0.5s ease;
+        margin: 0;                                                /* Remove a margem padrão do body */
+        padding: 0;                                               /* Remove o padding padrão do body */
+        background: linear-gradient(180deg, #2E003E, #0A0A0A);    /* Fundo em degradê roxo → preto */
+        font-family: "Cinzel", serif;                             /* Fonte principal da página (estilo medieval) */
+        color: #EEE;                                              /* Cor padrão dos textos (cinza claro) */
+        min-height: 100vh;                                        /* Garante que ocupe pelo menos a altura inteira da tela */
+        display: flex;                                            /* Usa flexbox para organizar o layout */
+        flex-direction: column;                                   /* Organiza os elementos em coluna (vertical) */
+        align-items: center;                                      /* Centraliza os elementos na horizontal */
+        padding: 30px;                                            /* Espaço interno ao redor do conteúdo */
+        transition: background 0.5s ease;                         /* Suaviza a transição quando o fundo mudar de cor */
     }
 
     h1 {
-        font-size: 42px;
-        color: #3EF03E;
-        text-shadow: 0 0 15px #3EF03E;
-        margin-bottom: 10px;
-        text-align: center;
+        font-size: 42px;                                          /* Tamanho grande para o título principal */
+        color: #3EF03E;                                           /* Verde neon no título */
+        text-shadow: 0 0 15px #3EF03E;                            /* Brilho verde ao redor do texto */
+        margin-bottom: 10px;                                      /* Espaço abaixo do h1 */
+        text-align: center;                                       /* Centraliza o título */
     }
 
     .subtitulo {
-        font-size: 16px;
-        margin-bottom: 25px;
-        text-align: center;
-        color: #ddd;
-        max-width: 500px;
+        font-size: 16px;                                          /* Tamanho da fonte do subtítulo */
+        margin-bottom: 25px;                                      /* Espaço abaixo do subtítulo */
+        text-align: center;                                       /* Centraliza o texto */
+        color: #ddd;                                              /* Cinza claro */
+        max-width: 500px;                                         /* Largura máxima para evitar linhas muito compridas */
     }
 
     .vilao-nome {
-        display: block;
-        font-size: 26px;
-        margin-top: 5px;
+        display: block;                                           /* Faz o span quebrar linha, abaixo de “Cálculo Sombrio” */
+        font-size: 26px;                                          /* Tamanho da fonte para o nome do vilão */
+        margin-top: 5px;                                          /* Espaço acima do nome */
     }
 
     .vilao-nome.gargamel {
-        color: #3EF03E;
-        text-shadow: 0 0 15px #3EF03E;
+        color: #3EF03E;                                           /* Cor verde para Gargamel */
+        text-shadow: 0 0 15px #3EF03E;                            /* Brilho verde para Gargamel */
     }
 
     .vilao-nome.bruxa {
-        color: #FFD54F;
-        text-shadow: 0 0 15px #FFD54F;
+        color: #FFD54F;                                           /* Cor amarela para a Bruxa do Valente */
+        text-shadow: 0 0 15px #FFD54F;                            /* Brilho amarelo para a bruxa */
     }
 
     /* Painel de vilões */
     .painel-viloes {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: flex;                                            /* Usa flexbox para distribuir os cards dos vilões */
+        gap: 20px;                                                /* Espaço entre os cards */
+        margin-bottom: 25px;                                      /* Espaço entre o painel e a caixa do formulário */
+        flex-wrap: wrap;                                          /* Permite que quebrem linha em telas menores */
+        justify-content: center;                                  /* Centraliza os cards na linha */
     }
 
     .vilao-card {
-        width: 180px;
-        background: rgba(20, 0, 30, 0.85);
-        border-radius: 15px;
-        border: 2px solid #6A0DAD;
-        padding: 12px 15px;
-        box-shadow: 0 0 20px rgba(106, 13, 173, 0.7);
-        cursor: pointer;
-        text-align: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        animation: flutuar 4s ease-in-out infinite;
+        width: 180px;                                             /* Largura fixa de cada card */
+        background: rgba(20, 0, 30, 0.85);                        /* Fundo roxo escuro com transparência */
+        border-radius: 15px;                                      /* Cantos arredondados */
+        border: 2px solid #6A0DAD;                                /* Borda roxa */
+        padding: 12px 15px;                                       /* Espaço interno do card */
+        box-shadow: 0 0 20px rgba(106, 13, 173, 0.7);             /* Sombra roxa em volta do card */
+        cursor: pointer;                                          /* Aponta que o card é clicável */
+        text-align: center;                                       /* Centraliza o texto dentro do card */
+        transition: transform 0.2s ease,                          /* Anima transformação (movimento e escala) */
+                    box-shadow 0.2s ease,                         /* Anima mudança de sombra */
+                    border-color 0.2s ease;                       /* Anima mudança da cor da borda */
+        position: relative;                                       /* Necessário para posicionar o brilho (.vilao-glow) relativo a ele */
+        overflow: hidden;                                         /* Esconde qualquer coisa que passe dos limites do card */
+        animation: flutuar 4s ease-in-out infinite;               /* Animação de flutuar constante */
     }
 
     .vilao-card:nth-child(2) {
-        animation-delay: 1s;
+        animation-delay: 1s;                                      /* Aplica um atraso na animação do segundo card para não ficarem sincronizados */
     }
 
     .vilao-card:hover {
-        transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 0 30px #3EF03E;
-        border-color: #3EF03E;
+        transform: translateY(-6px) scale(1.03);                  /* Ao passar o mouse, levanta e aumenta levemente */
+        box-shadow: 0 0 30px #3EF03E;                             /* Sombra verde mais forte no hover */
+        border-color: #3EF03E;                                    /* Borda muda para verde no hover */
     }
 
     .vilao-card h3 {
-        margin: 5px 0;
-        font-size: 18px;
+        margin: 5px 0;                                            /* Margem vertical pequena no título do card */
+        font-size: 18px;                                          /* Tamanho do subtítulo do card */
     }
 
     .vilao-card p {
-        font-size: 13px;
-        margin: 0;
-        opacity: 0.9;
+        font-size: 13px;                                          /* Tamanho menor para o texto descritivo */
+        margin: 0;                                                /* Remove margens padrão do parágrafo */
+        opacity: 0.9;                                             /* Deixa o texto um pouco translúcido */
     }
 
     .tag-vilao {
-        display: inline-block;
-        padding: 3px 8px;
-        border-radius: 999px;
-        font-size: 11px;
-        margin-bottom: 6px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        display: inline-block;                                    /* Tag em formato de “pill” */
+        padding: 3px 8px;                                         /* Espaço interno da tag */
+        border-radius: 999px;                                     /* Deixa a tag completamente arredondada */
+        font-size: 11px;                                          /* Tamanho pequeno da fonte */
+        margin-bottom: 6px;                                       /* Espaço abaixo da tag */
+        text-transform: uppercase;                                /* Deixa o texto em caixa alta */
+        letter-spacing: 1px;                                      /* Espaçamento entre letras para estilo “tag” */
     }
 
     .tag-gargamel {
-        background: rgba(62, 240, 62, 0.15);
-        border: 1px solid #3EF03E;
-        color: #3EF03E;
+        background: rgba(62, 240, 62, 0.15);                      /* Fundo verde transparente */
+        border: 1px solid #3EF03E;                                /* Borda verde */
+        color: #3EF03E;                                           /* Texto verde */
     }
 
     .tag-bruxa {
-        background: rgba(255, 213, 79, 0.18);
-        border: 1px solid #FFD54F;
-        color: #FFD54F;
+        background: rgba(255, 213, 79, 0.18);                     /* Fundo amarelo transparente */
+        border: 1px solid #FFD54F;                                /* Borda amarela */
+        color: #FFD54F;                                           /* Texto amarelo */
     }
 
     .vilao-glow {
-        position: absolute;
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        filter: blur(40px);
-        opacity: 0.35;
-        z-index: -1;
+        position: absolute;                                       /* Posiciona o brilho relativo ao card */
+        width: 140px;                                             /* Largura do círculo de brilho */
+        height: 140px;                                            /* Altura do círculo */
+        border-radius: 50%;                                       /* Deixa o elemento circular */
+        filter: blur(40px);                                       /* Aplica desfoque para parecer um brilho */
+        opacity: 0.35;                                            /* Deixa o brilho translúcido */
+        z-index: -1;                                              /* Coloca o brilho atrás do conteúdo do card */
     }
 
     .vilao-glow.gargamel {
-        background: #3EF03E;
-        top: -40px;
-        right: -40px;
+        background: #3EF03E;                                      /* Cor do brilho do Gargamel (verde) */
+        top: -40px;                                               /* Posição vertical do brilho dentro do card */
+        right: -40px;                                             /* Posição horizontal do brilho dentro do card */
     }
 
     .vilao-glow.bruxa {
-        background: #FFD54F;
-        bottom: -40px;
-        left: -40px;
+        background: #FFD54F;                                      /* Cor do brilho da Bruxa (amarelo) */
+        bottom: -40px;                                            /* Posição vertical do brilho */
+        left: -40px;                                              /* Posição horizontal do brilho */
     }
 
     @keyframes flutuar {
-        0%   { transform: translateY(0px); }
-        50%  { transform: translateY(-4px); }
-        100% { transform: translateY(0px); }
+        0%   { transform: translateY(0px); }                      /* Início: posição normal */
+        50%  { transform: translateY(-4px); }                     /* Meio: sobe um pouco */
+        100% { transform: translateY(0px); }                      /* Final: volta à posição inicial */
     }
 
     /* Caixa principal */
     .caixa {
-        background: rgba(20, 0, 30, 0.8);
-        border: 2px solid #6A0DAD;
-        padding: 20px;
-        border-radius: 15px;
-        width: 380px;
-        box-shadow: 0 0 25px #6A0DAD;
-        backdrop-filter: blur(6px);
-        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        background: rgba(20, 0, 30, 0.8);                         /* Fundo da caixa de formulário */
+        border: 2px solid #6A0DAD;                                /* Borda roxa */
+        padding: 20px;                                            /* Espaço interno */
+        border-radius: 15px;                                      /* Cantos arredondados */
+        width: 380px;                                             /* Largura fixa do formulário */
+        box-shadow: 0 0 25px #6A0DAD;                             /* Sombra roxa */
+        backdrop-filter: blur(6px);                               /* Efeito “vidro fosco” (onde suportado) */
+        transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Suaviza mudanças de borda e sombra (usadas na troca de vilão) */
     }
 
     label {
-        font-size: 15px;
-        margin-top: 10px;
-        color: #EEE;
-        display: block;
+        font-size: 15px;                                          /* Tamanho padrão de texto dos labels */
+        margin-top: 10px;                                         /* Espaço antes de cada label */
+        color: #EEE;                                              /* Cor dos rótulos */
+        display: block;                                           /* Faz o label ocupar a linha inteira */
     }
 
     input, textarea, select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: none;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 15px;
-        background: #1b0027;
-        color: #EEE;
-        border: 1px solid #6A0DAD;
-        box-sizing: border-box;
-        transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        width: 100%;                                              /* Campos ocupam toda a largura da caixa */
+        padding: 10px;                                            /* Espaço interno nos campos */
+        border-radius: 8px;                                       /* Cantos arredondados */
+        border: none;                                             /* Remove borda padrão */
+        margin-top: 5px;                                          /* Espaço entre label e campo */
+        margin-bottom: 10px;                                      /* Espaço abaixo do campo */
+        font-size: 15px;                                          /* Tamanho do texto dentro dos campos */
+        background: #1b0027;                                      /* Fundo roxo escuro */
+        color: #EEE;                                              /* Texto claro */
+        border: 1px solid #6A0DAD;                                /* Borda roxa fina */
+        box-sizing: border-box;                                   /* Inclui padding e borda no cálculo de largura */
+        transition: box-shadow 0.2s ease,                         /* Animações suaves ao focar */
+                    border-color 0.2s ease,
+                    background 0.2s ease;
     }
 
     input:focus, textarea:focus, select:focus {
-        outline: none;
-        box-shadow: 0 0 10px #3EF03E;
-        border-color: #3EF03E;
-        background: #210034;
+        outline: none;                                            /* Remove contorno azul padrão do navegador */
+        box-shadow: 0 0 10px #3EF03E;                             /* Brilho verde ao focar */
+        border-color: #3EF03E;                                    /* Borda verde ao focar */
+        background: #210034;                                      /* Leve mudança de cor de fundo ao focar */
     }
 
     textarea {
-        resize: vertical;
-        min-height: 80px;
+        resize: vertical;                                         /* Permite redimensionar apenas na vertical */
+        min-height: 80px;                                         /* Altura mínima do textarea */
     }
 
     button {
-        width: 100%;
-        padding: 12px;
-        background: #6A0DAD;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 17px;
-        font-weight: bold;
-        transition: 0.2s;
-        margin-top: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        width: 100%;                                              /* Botão ocupa a largura da caixa */
+        padding: 12px;                                            /* Espaço interno no botão */
+        background: #6A0DAD;                                      /* Fundo roxo padrão */
+        color: white;                                             /* Texto branco */
+        border: none;                                             /* Remove borda padrão */
+        border-radius: 8px;                                       /* Cantos arredondados */
+        cursor: pointer;                                          /* Cursor de “mãozinha” ao passar o mouse */
+        font-size: 17px;                                          /* Tamanho da fonte do botão */
+        font-weight: bold;                                        /* Deixa o texto em negrito */
+        transition: 0.2s;                                         /* Suaviza as transições de hover */
+        margin-top: 10px;                                         /* Espaço acima do botão */
+        text-transform: uppercase;                                /* Deixa o texto do botão em caixa alta */
+        letter-spacing: 1px;                                      /* Espaçamento entre letras para dar destaque */
     }
 
     button:hover {
-        background: #3EF03E;
-        color: black;
-        box-shadow: 0 0 20px #3EF03E;
+        background: #3EF03E;                                      /* Fundo verde ao passar o mouse */
+        color: black;                                             /* Texto preto no hover */
+        box-shadow: 0 0 20px #3EF03E;                             /* Brilho verde ao redor do botão */
     }
 
     h2 {
-        margin-top: 30px;
-        text-shadow: 0 0 10px #D60000;
+        margin-top: 30px;                                         /* Espaço acima do título “Resultado da Magia” */
+        text-shadow: 0 0 10px #D60000;                            /* Brilho vermelho no subtítulo */
     }
 
     pre {
-        width: 380px;
-        background: #0A0A0A;
-        padding: 15px;
-        color: #3EF03E;
-        border-radius: 10px;
-        border: 1px solid #6A0DAD;
-        box-shadow: 0 0 15px #6A0DAD;
-        max-height: 300px;
-        overflow-y: auto;
-        font-size: 14px;
-        white-space: pre-wrap;
+        width: 380px;                                             /* Mesma largura da caixa de formulário */
+        background: #0A0A0A;                                      /* Fundo preto estilo terminal */
+        padding: 15px;                                            /* Espaço interno do bloco de resultado */
+        color: #3EF03E;                                           /* Texto verde (estilo saída de console) */
+        border-radius: 10px;                                      /* Cantos arredondados */
+        border: 1px solid #6A0DAD;                                /* Borda roxa */
+        box-shadow: 0 0 15px #6A0DAD;                             /* Sombra roxa suave */
+        max-height: 300px;                                        /* Altura máxima com rolagem se passar disso */
+        overflow-y: auto;                                         /* Ativa barra de rolagem vertical se necessário */
+        font-size: 14px;                                          /* Tamanho da fonte no resultado */
+        white-space: pre-wrap;                                    /* Quebra as linhas, mas mantém os espaços; bom para mostrar JSON formatado */
     }
 </style>
 
 </head>
-<body>
+<body> <!-- Início do corpo visível da página -->
 
 <h1>
-    Cálculo Sombrio
-    <span id="vilao-nome" class="vilao-nome gargamel">Gargamel &amp; Bruxa do Valente</span>
+    Cálculo Sombrio <!-- Título principal da interface -->
+    <span id="vilao-nome" class="vilao-nome gargamel">Gargamel &amp; Bruxa do Valente</span> <!-- Subtítulo com o nome dos vilões; classe muda no JS -->
 </h1>
 
 <p class="subtitulo">
     Escolha o vilão responsável pelo feitiço numérico e invoque Newton-Raphson, Bisseção
     ou Eliminação de Gauss diretamente no caldeirão do backend.
-</p>
+</p> <!-- Texto explicando o propósito da página -->
 
-<div class="painel-viloes">
-    <div class="vilao-card" onclick="selecionarVilao('gargamel')">
-        <div class="vilao-glow gargamel"></div>
-        <span class="tag-vilao tag-gargamel">Gargamel</span>
-        <h3>Feitiços de Precisão</h3>
-        <p>Perfeito para raízes e sistemas que exigem maldade metódica.</p>
+<div class="painel-viloes"> <!-- Painel com os cards de escolha de vilão -->
+
+    <div class="vilao-card" onclick="selecionarVilao('gargamel')"> <!-- Card do Gargamel; ao clicar chama a função JS selecionarVilao('gargamel') -->
+        <div class="vilao-glow gargamel"></div> <!-- Círculo de brilho verde atrás do card do Gargamel -->
+        <span class="tag-vilao tag-gargamel">Gargamel</span> <!-- Tag com o nome do vilão -->
+        <h3>Feitiços de Precisão</h3> <!-- Título curto descritivo do estilo do vilão -->
+        <p>Perfeito para raízes e sistemas que exigem maldade metódica.</p> <!-- Descrição temática -->
     </div>
 
-    <div class="vilao-card" onclick="selecionarVilao('bruxa')">
-        <div class="vilao-glow bruxa"></div>
-        <span class="tag-vilao tag-bruxa">Bruxa do Valente</span>
-        <h3>Magia Ancestral</h3>
-        <p>Ideal para experimentos numéricos ousados e misteriosos.</p>
+    <div class="vilao-card" onclick="selecionarVilao('bruxa')"> <!-- Card da Bruxa do Valente -->
+        <div class="vilao-glow bruxa"></div> <!-- Círculo de brilho amarelo atrás do card -->
+        <span class="tag-vilao tag-bruxa">Bruxa do Valente</span> <!-- Tag com o nome da bruxa -->
+        <h3>Magia Ancestral</h3> <!-- Título do card -->
+        <p>Ideal para experimentos numéricos ousados e misteriosos.</p> <!-- Descrição temática -->
     </div>
 </div>
 
-<div class="caixa" id="caixa-form">
+<div class="caixa" id="caixa-form"> <!-- Caixa principal do formulário; id usado pelo JS para mudar cor e sombra ao trocar vilão -->
 
     <!-- Escolha do método -->
-    <label>Método:</label>
-    <select id="metodo" onchange="atualizarCampos()">
-        <option value="newton">Newton-Raphson</option>
-        <option value="bissecao">Bisseção</option>
-        <option value="gauss">Eliminação de Gauss</option>
+    <label>Método:</label> <!-- Rótulo do select de método -->
+    <select id="metodo" onchange="atualizarCampos()"> <!-- Select que escolhe o método; onchange chama JS para mostrar/esconder campos -->
+        <option value="newton">Newton-Raphson</option> <!-- Opção do método de Newton -->
+        <option value="bissecao">Bisseção</option> <!-- Opção da Bisseção -->
+        <option value="gauss">Eliminação de Gauss</option> <!-- Opção de Eliminação de Gauss -->
     </select>
 
     <!-- Campos comuns / específicos -->
 
-    <div id="campo-funcao">
-        <label>Função f(x):</label>
-        <input id="funcao" placeholder="ex: exp(-x) - x">
+    <div id="campo-funcao"> <!-- Bloco do campo função f(x); aparece em Newton e Bisseção -->
+        <label>Função f(x):</label> <!-- Rótulo do input de função -->
+        <input id="funcao" placeholder="ex: exp(-x) - x"> <!-- Campo onde o usuário digita a função; texto de exemplo no placeholder -->
     </div>
 
-    <div id="campo-x0">
-        <label>Valor inicial x0:</label>
-        <input id="x0" type="number" step="any" value="1">
+    <div id="campo-x0"> <!-- Campo do valor inicial x0 (usado em Newton) -->
+        <label>Valor inicial x0:</label> <!-- Rótulo do x0 -->
+        <input id="x0" type="number" step="any" value="1"> <!-- Input numérico para x0, com valor inicial 1 -->
     </div>
 
-    <div id="campo-a">
-        <label>Limite inferior a:</label>
-        <input id="a" type="number" step="any" value="0">
+    <div id="campo-a"> <!-- Campo do limite inferior (usado em Bisseção) -->
+        <label>Limite inferior a:</label> <!-- Rótulo de a -->
+        <input id="a" type="number" step="any" value="0"> <!-- Input numérico para a, começando em 0 -->
     </div>
 
-    <div id="campo-b">
-        <label>Limite superior b:</label>
-        <input id="b" type="number" step="any" value="1">
+    <div id="campo-b"> <!-- Campo do limite superior (usado em Bisseção) -->
+        <label>Limite superior b:</label> <!-- Rótulo de b -->
+        <input id="b" type="number" step="any" value="1"> <!-- Input numérico para b, começando em 1 -->
     </div>
 
-    <div id="campo-matriz">
-        <label>Matriz aumentada [A|b]:</label>
+    <div id="campo-matriz"> <!-- Bloco do textarea da matriz aumentada (usado em Gauss) -->
+        <label>Matriz aumentada [A|b]:</label> <!-- Rótulo explicando que é a matriz aumentada -->
         <textarea id="matriz" placeholder="Exemplo para 2 equações:
 2 3 8
-1 -1 0"></textarea>
+1 -1 0"></textarea> <!-- Textarea onde o usuário digita a matriz linha por linha -->
     </div>
 
-    <label>Tolerância:</label>
-    <input id="tolerancia" type="number" step="any" value="0.0001">
+    <label>Tolerância:</label> <!-- Rótulo da tolerância numérica -->
+    <input id="tolerancia" type="number" step="any" value="0.0001"> <!-- Campo numérico da tolerância; usado em Newton e Bisseção -->
 
-    <label>Máx. iterações:</label>
-    <input id="max_iter" type="number" value="10">
+    <label>Máx. iterações:</label> <!-- Rótulo do número máximo de iterações -->
+    <input id="max_iter" type="number" value="10"> <!-- Campo numérico para o limite de iterações -->
 
-    <button onclick="calcular()">Invocar o Feitiço</button>
+    <button onclick="calcular()">Invocar o Feitiço</button> <!-- Botão que dispara a função calcular() no JavaScript -->
 </div>
 
-<h2>Resultado da Magia</h2>
-<pre id="resultado">Ainda nada conjurado...</pre>
+<h2>Resultado da Magia</h2> <!-- Título da área de resultado -->
+<pre id="resultado">Ainda nada conjurado...</pre> <!-- Bloco onde o JSON de resposta do backend será exibido -->
 
 <script>
-function atualizarCampos() {
-    const metodo = document.getElementById("metodo").value;
+function atualizarCampos() {                                                   // Controla quais campos aparecem dependendo do método escolhido
+    const metodo = document.getElementById("metodo").value;                    // Pega o valor atual do select de método
 
     // Mostra/esconde campos conforme o método
-    const campoFuncao = document.getElementById("campo-funcao");
-    const campoX0 = document.getElementById("campo-x0");
-    const campoA = document.getElementById("campo-a");
-    const campoB = document.getElementById("campo-b");
-    const campoMatriz = document.getElementById("campo-matriz");
-    const campoTol = document.getElementById("tolerancia");
-    const campoMaxIter = document.getElementById("max_iter");
+    const campoFuncao = document.getElementById("campo-funcao");               // Referência ao bloco da função f(x)
+    const campoX0 = document.getElementById("campo-x0");                       // Referência ao bloco do x0
+    const campoA = document.getElementById("campo-a");                         // Referência ao bloco de a
+    const campoB = document.getElementById("campo-b");                         // Referência ao bloco de b
+    const campoMatriz = document.getElementById("campo-matriz");               // Referência ao bloco da matriz
+    const campoTol = document.getElementById("tolerancia");                    // Input de tolerância
+    const campoMaxIter = document.getElementById("max_iter");                  // Input de máximo de iterações
 
-    if (metodo === "newton") {
-        campoFuncao.style.display = "block";
-        campoX0.style.display = "block";
-        campoA.style.display = "none";
+    if (metodo === "newton") {                                                 // Se for Newton-Raphson...
+        campoFuncao.style.display = "block";                                   // Mostra função f(x)
+        campoX0.style.display = "block";                                       // Mostra x0
+        campoA.style.display = "none";                                         // Esconde limites do intervalo
         campoB.style.display = "none";
-        campoMatriz.style.display = "none";
-        campoTol.disabled = false;
-        campoMaxIter.disabled = false;
-    } else if (metodo === "bissecao") {
-        campoFuncao.style.display = "block";
-        campoX0.style.display = "none";
-        campoA.style.display = "block";
-        campoB.style.display = "block";
-        campoMatriz.style.display = "none";
-        campoTol.disabled = false;
-        campoMaxIter.disabled = false;
-    } else if (metodo === "gauss") {
-        campoFuncao.style.display = "none";
-        campoX0.style.display = "none";
-        campoA.style.display = "none";
-        campoB.style.display = "none";
-        campoMatriz.style.display = "block";
-        campoTol.disabled = true;
-        campoMaxIter.disabled = true;
+        campoMatriz.style.display = "none";                                    // Esconde matriz
+        campoTol.disabled = false;                                             // Habilita tolerância
+        campoMaxIter.disabled = false;                                         // Habilita max_iter
+    } else if (metodo === "bissecao") {                                        // Se for Bisseção...
+        campoFuncao.style.display = "block";                                   // Mostra função f(x)
+        campoX0.style.display = "none";                                        // Esconde x0
+        campoA.style.display = "block";                                        // Mostra limite inferior
+        campoB.style.display = "block";                                        // Mostra limite superior
+        campoMatriz.style.display = "none";                                    // Esconde matriz
+        campoTol.disabled = false;                                             // Habilita tolerância
+        campoMaxIter.disabled = false;                                         // Habilita max_iter
+    } else if (metodo === "gauss") {                                           // Se for Gauss...
+        campoFuncao.style.display = "none";                                    // Esconde função f(x)
+        campoX0.style.display = "none";                                        // Esconde x0
+        campoA.style.display = "none";                                         // Esconde a
+        campoB.style.display = "none";                                         // Esconde b
+        campoMatriz.style.display = "block";                                   // Mostra campo da matriz aumentada
+        campoTol.disabled = true;                                              // Desativa tolerância (não usada diretamente)
+        campoMaxIter.disabled = true;                                          // Desativa max_iter
     }
 }
 
 // já configura a tela inicial
-atualizarCampos();
+atualizarCampos();                                                             // Chama a função ao carregar a página para deixar os campos certos desde o início
 
-async function calcular() {
-    const metodo = document.getElementById("metodo").value;
-    const resultadoEl = document.getElementById("resultado");
-    let url = "";
-    let payload = {};
+async function calcular() {                                                    // Função que envia os dados ao backend e mostra o resultado
+    const metodo = document.getElementById("metodo").value;                    // Lê qual método foi escolhido
+    const resultadoEl = document.getElementById("resultado");                  // Pega o elemento <pre> onde o resultado irá aparecer
+    let url = "";                                                              // URL da rota do backend (vai mudar conforme o método)
+    let payload = {};                                                          // Objeto que será enviado como JSON na requisição
 
-    if (metodo === "newton") {
-        url = "http://127.0.0.1:5000/newton";
-        payload = {
-            funcao: document.getElementById("funcao").value,
-            x0: parseFloat(document.getElementById("x0").value),
-            tolerancia: parseFloat(document.getElementById("tolerancia").value),
-            max_iter: parseInt(document.getElementById("max_iter").value)
+    if (metodo === "newton") {                                                 // Configuração para Newton-Raphson
+        url = "http://127.0.0.1:5000/newton";                                  // Rota da API de Newton no Flask
+        payload = {                                                            // Monta o corpo da requisição esperado pelo backend
+            funcao: document.getElementById("funcao").value,                   // Função f(x) digitada
+            x0: parseFloat(document.getElementById("x0").value),               // Converte x0 para número real
+            tolerancia: parseFloat(document.getElementById("tolerancia").value),// Converte tolerância para número real
+            max_iter: parseInt(document.getElementById("max_iter").value)      // Converte max_iter para inteiro
         };
-    } else if (metodo === "bissecao") {
-        url = "http://127.0.0.1:5000/bissecao";
-        payload = {
-            funcao: document.getElementById("funcao").value,
-            a: parseFloat(document.getElementById("a").value),
-            b: parseFloat(document.getElementById("b").value),
-            tolerancia: parseFloat(document.getElementById("tolerancia").value),
-            max_iter: parseInt(document.getElementById("max_iter").value)
+    } else if (metodo === "bissecao") {                                        // Configuração para Bisseção
+        url = "http://127.0.0.1:5000/bissecao";                                // Rota da API de Bisseção
+        payload = {                                                            // Corpo da requisição para Bisseção
+            funcao: document.getElementById("funcao").value,                   // Função f(x)
+            a: parseFloat(document.getElementById("a").value),                 // Limite inferior do intervalo
+            b: parseFloat(document.getElementById("b").value),                 // Limite superior do intervalo
+            tolerancia: parseFloat(document.getElementById("tolerancia").value),// Tolerância
+            max_iter: parseInt(document.getElementById("max_iter").value)      // Máximo de iterações
         };
-    } else if (metodo === "gauss") {
-        url = "http://127.0.0.1:5000/gauss";
+    } else if (metodo === "gauss") {                                           // Configuração para Eliminação de Gauss
+        url = "http://127.0.0.1:5000/gauss";                                   // Rota da API de Gauss
 
         // lê a matriz digitada
-        const textoMatriz = document.getElementById("matriz").value.trim();
-        const linhas = textoMatriz.split("\n").filter(l => l.trim().length > 0);
+        const textoMatriz = document.getElementById("matriz").value.trim();    // Pega o conteúdo do textarea e tira espaços extras nas bordas
+        const linhas = textoMatriz.split("\n").filter(l => l.trim().length > 0); // Separa por linhas e ignora linhas vazias
 
-        const matriz = linhas.map(linha => {
-            return linha.trim().split(/\s+/).map(Number);
+        const matriz = linhas.map(linha => {                                   // Para cada linha de texto...
+            return linha.trim().split(/\s+/).map(Number);                      // Separa pelos espaços e converte cada item em número
         });
 
-        payload = {
-            matriz: matriz,
-            usar_pivoteamento: true
+        payload = {                                                            // Corpo da requisição para Gauss
+            matriz: matriz,                                                    // Matriz aumentada [A|b] em formato de array de arrays
+            usar_pivoteamento: true                                            // Indica ao backend que deve usar pivoteamento parcial
         };
     }
 
     try {
-        const resposta = await fetch(url, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(payload)
+        const resposta = await fetch(url, {                                    // Envia a requisição para o backend
+            method: "POST",                                                    // Usa método POST
+            headers: {"Content-Type": "application/json"},                     // Informa que o corpo está em JSON
+            body: JSON.stringify(payload)                                      // Converte o objeto JS em string JSON
         });
 
-        const dados = await resposta.json();
-        resultadoEl.textContent = JSON.stringify(dados, null, 2);
-    } catch (erro) {
-        resultadoEl.textContent =
+        const dados = await resposta.json();                                   // Converte a resposta em objeto JS
+        resultadoEl.textContent = JSON.stringify(dados, null, 2);              // Formata o JSON (indentação de 2 espaços) e mostra no <pre>
+    } catch (erro) {                                                           // Se der erro (backend offline, problema de rede, etc.)
+        resultadoEl.textContent =                                             // Mostra mensagem de erro customizada
             "⚠ O feitiço falhou ao se comunicar com o caldeirão (backend):\n" + erro;
     }
 }
 
 /* Troca de tema entre Gargamel e Bruxa do Valente */
-function selecionarVilao(vilao) {
-    const corpo = document.body;
-    const tituloVilao = document.getElementById("vilao-nome");
-    const caixa = document.getElementById("caixa-form");
+function selecionarVilao(vilao) {                                              // Função chamada ao clicar em um dos cards de vilão
+    const corpo = document.body;                                               // Referência ao elemento <body>
+    const tituloVilao = document.getElementById("vilao-nome");                 // Referência ao span que mostra o nome do vilão
+    const caixa = document.getElementById("caixa-form");                       // Referência à caixa do formulário
 
-    if (vilao === "gargamel") {
-        corpo.style.background = "linear-gradient(180deg, #2E003E, #0A0A0A)";
-        tituloVilao.textContent = "Gargamel, Mestre da Bisseção";
-        tituloVilao.classList.remove("bruxa");
-        tituloVilao.classList.add("gargamel");
+    if (vilao === "gargamel") {                                                // Se o vilão escolhido for Gargamel...
+        corpo.style.background = "linear-gradient(180deg, #2E003E, #0A0A0A)";  // Muda o fundo para o degradê roxo original
+        tituloVilao.textContent = "Gargamel, Mestre da Bisseção";              // Atualiza o texto do vilão
+        tituloVilao.classList.remove("bruxa");                                 // Remove a classe da bruxa (se tiver)
+        tituloVilao.classList.add("gargamel");                                 // Adiciona a classe gargamel (cor verde e brilho)
 
-        caixa.style.borderColor = "#6A0DAD";
-        caixa.style.boxShadow = "0 0 25px #6A0DAD";
-    } else if (vilao === "bruxa") {
-        corpo.style.background = "linear-gradient(180deg, #402000, #0A0A0A)";
-        tituloVilao.textContent = "Bruxa do Valente, Guardiã de Newton";
-        tituloVilao.classList.remove("gargamel");
-        tituloVilao.classList.add("bruxa");
+        caixa.style.borderColor = "#6A0DAD";                                   // Borda da caixa volta a ser roxa
+        caixa.style.boxShadow = "0 0 25px #6A0DAD";                            // Sombra roxa na caixa
+    } else if (vilao === "bruxa") {                                            // Se o vilão escolhido for a Bruxa do Valente...
+        corpo.style.background = "linear-gradient(180deg, #402000, #0A0A0A)";  // Fundo muda para um degradê marrom→preto
+        tituloVilao.textContent = "Bruxa do Valente, Guardiã de Newton";       // Atualiza o texto do vilão
+        tituloVilao.classList.remove("gargamel");                              // Remove classe de Gargamel
+        tituloVilao.classList.add("bruxa");                                    // Adiciona a classe bruxa (cor amarela e brilho)
 
-        caixa.style.borderColor = "#FFD54F";
-        caixa.style.boxShadow = "0 0 25px #FFD54F";
+        caixa.style.borderColor = "#FFD54F";                                   // Borda da caixa fica amarela
+        caixa.style.boxShadow = "0 0 25px #FFD54F";                            // Sombra amarela na caixa
     }
 }
 </script>
