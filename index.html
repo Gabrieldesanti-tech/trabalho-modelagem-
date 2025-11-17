@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Vilões da Disney - Métodos Numéricos</title>
+<title>Gargamel & Bruxa do Valente - Métodos Numéricos</title>
 
 <style>
     body {
@@ -16,16 +16,137 @@
         flex-direction: column;
         align-items: center;
         padding: 30px;
+        transition: background 0.5s ease;
     }
 
     h1 {
         font-size: 42px;
         color: #3EF03E;
         text-shadow: 0 0 15px #3EF03E;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         text-align: center;
     }
 
+    .subtitulo {
+        font-size: 16px;
+        margin-bottom: 25px;
+        text-align: center;
+        color: #ddd;
+        max-width: 500px;
+    }
+
+    .vilao-nome {
+        display: block;
+        font-size: 26px;
+        margin-top: 5px;
+    }
+
+    .vilao-nome.gargamel {
+        color: #3EF03E;
+        text-shadow: 0 0 15px #3EF03E;
+    }
+
+    .vilao-nome.bruxa {
+        color: #FFD54F;
+        text-shadow: 0 0 15px #FFD54F;
+    }
+
+    /* Painel de vilões */
+    .painel-viloes {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .vilao-card {
+        width: 180px;
+        background: rgba(20, 0, 30, 0.85);
+        border-radius: 15px;
+        border: 2px solid #6A0DAD;
+        padding: 12px 15px;
+        box-shadow: 0 0 20px rgba(106, 13, 173, 0.7);
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        animation: flutuar 4s ease-in-out infinite;
+    }
+
+    .vilao-card:nth-child(2) {
+        animation-delay: 1s;
+    }
+
+    .vilao-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 0 30px #3EF03E;
+        border-color: #3EF03E;
+    }
+
+    .vilao-card h3 {
+        margin: 5px 0;
+        font-size: 18px;
+    }
+
+    .vilao-card p {
+        font-size: 13px;
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .tag-vilao {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .tag-gargamel {
+        background: rgba(62, 240, 62, 0.15);
+        border: 1px solid #3EF03E;
+        color: #3EF03E;
+    }
+
+    .tag-bruxa {
+        background: rgba(255, 213, 79, 0.18);
+        border: 1px solid #FFD54F;
+        color: #FFD54F;
+    }
+
+    .vilao-glow {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.35;
+        z-index: -1;
+    }
+
+    .vilao-glow.gargamel {
+        background: #3EF03E;
+        top: -40px;
+        right: -40px;
+    }
+
+    .vilao-glow.bruxa {
+        background: #FFD54F;
+        bottom: -40px;
+        left: -40px;
+    }
+
+    @keyframes flutuar {
+        0%   { transform: translateY(0px); }
+        50%  { transform: translateY(-4px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* Caixa principal */
     .caixa {
         background: rgba(20, 0, 30, 0.8);
         border: 2px solid #6A0DAD;
@@ -34,6 +155,7 @@
         width: 380px;
         box-shadow: 0 0 25px #6A0DAD;
         backdrop-filter: blur(6px);
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     label {
@@ -55,12 +177,14 @@
         color: #EEE;
         border: 1px solid #6A0DAD;
         box-sizing: border-box;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     }
 
     input:focus, textarea:focus, select:focus {
         outline: none;
         box-shadow: 0 0 10px #3EF03E;
         border-color: #3EF03E;
+        background: #210034;
     }
 
     textarea {
@@ -80,6 +204,8 @@
         font-weight: bold;
         transition: 0.2s;
         margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     button:hover {
@@ -111,9 +237,33 @@
 </head>
 <body>
 
-<h1>Cáculo do Gargamel <br>Métodos Numéricos</h1>
+<h1>
+    Cálculo Sombrio
+    <span id="vilao-nome" class="vilao-nome gargamel">Gargamel &amp; Bruxa do Valente</span>
+</h1>
 
-<div class="caixa">
+<p class="subtitulo">
+    Escolha o vilão responsável pelo feitiço numérico e invoque Newton-Raphson, Bisseção
+    ou Eliminação de Gauss diretamente no caldeirão do backend.
+</p>
+
+<div class="painel-viloes">
+    <div class="vilao-card" onclick="selecionarVilao('gargamel')">
+        <div class="vilao-glow gargamel"></div>
+        <span class="tag-vilao tag-gargamel">Gargamel</span>
+        <h3>Feitiços de Precisão</h3>
+        <p>Perfeito para raízes e sistemas que exigem maldade metódica.</p>
+    </div>
+
+    <div class="vilao-card" onclick="selecionarVilao('bruxa')">
+        <div class="vilao-glow bruxa"></div>
+        <span class="tag-vilao tag-bruxa">Bruxa do Valente</span>
+        <h3>Magia Ancestral</h3>
+        <p>Ideal para experimentos numéricos ousados e misteriosos.</p>
+    </div>
+</div>
+
+<div class="caixa" id="caixa-form">
 
     <!-- Escolha do método -->
     <label>Método:</label>
@@ -199,8 +349,6 @@ function atualizarCampos() {
         campoA.style.display = "none";
         campoB.style.display = "none";
         campoMatriz.style.display = "block";
-        // Tolerância e max_iter não são usados diretamente em Gauss,
-        // então podemos desativar se quiser:
         campoTol.disabled = true;
         campoMaxIter.disabled = true;
     }
@@ -261,6 +409,31 @@ async function calcular() {
     } catch (erro) {
         resultadoEl.textContent =
             "⚠ O feitiço falhou ao se comunicar com o caldeirão (backend):\n" + erro;
+    }
+}
+
+/* Troca de tema entre Gargamel e Bruxa do Valente */
+function selecionarVilao(vilao) {
+    const corpo = document.body;
+    const tituloVilao = document.getElementById("vilao-nome");
+    const caixa = document.getElementById("caixa-form");
+
+    if (vilao === "gargamel") {
+        corpo.style.background = "linear-gradient(180deg, #2E003E, #0A0A0A)";
+        tituloVilao.textContent = "Gargamel, Mestre da Bisseção";
+        tituloVilao.classList.remove("bruxa");
+        tituloVilao.classList.add("gargamel");
+
+        caixa.style.borderColor = "#6A0DAD";
+        caixa.style.boxShadow = "0 0 25px #6A0DAD";
+    } else if (vilao === "bruxa") {
+        corpo.style.background = "linear-gradient(180deg, #402000, #0A0A0A)";
+        tituloVilao.textContent = "Bruxa do Valente, Guardiã de Newton";
+        tituloVilao.classList.remove("gargamel");
+        tituloVilao.classList.add("bruxa");
+
+        caixa.style.borderColor = "#FFD54F";
+        caixa.style.boxShadow = "0 0 25px #FFD54F";
     }
 }
 </script>
