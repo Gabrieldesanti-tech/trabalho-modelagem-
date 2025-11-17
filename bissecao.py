@@ -1,50 +1,51 @@
 import math
 
-def bissecao(f, a, b, tolerancia=1e-6, max_iteracoes=100):
+def bissecao(funcao_str, a, b, tol=1e-6, max_iter=100):
     """
-    Método da Bisseção adaptado para o BACK-END.
-    Agora recebe a função f(x) já pronta, e retorna um dicionário JSON-friendly.
+    Método da Bisseção para a API:
+    - funcao_str: string com f(x), ex: "x**3 - x - 1"
+    - a, b: limites do intervalo [a, b]
+    - tol: tolerância
+    - max_iter: número máximo de iterações
+
+    Retorna:
+      - raiz (float) se deu certo
+      - None se não atender condição de sinal oposto em f(a) e f(b)
     """
 
-    historico = []
+    def f(x):
+        contexto = {
+            "x": x,
+            "math": math,
+            "e": math.e,
+            "pi": math.pi,
+            "sin": math.sin,
+            "cos": math.cos,
+            "tan": math.tan,
+            "log": math.log,   # log natural
+            "exp": math.exp,
+            "sqrt": math.sqrt,
+            "log10": math.log10,
+        }
+        return eval(funcao_str, {"__builtins__": {}}, contexto)
 
     fa = f(a)
     fb = f(b)
 
-    # Verifica mudança de sinal
+    # condição de existência de raiz (mudança de sinal)
     if fa * fb >= 0:
-        return {
-            "convergiu": False,
-            "mensagem": "f(a) e f(b) devem ter sinais opostos.",
-            "historico": [],
-            "raiz": None,
-            "iteracoes": 0
-        }
+        # para a API, devolvemos None; o backend trata isso
+        return None
 
-    for i in range(1, max_iteracoes + 1):
+    for _ in range(1, max_iter + 1):
         c = (a + b) / 2
         fc = f(c)
 
-        historico.append({
-            "iteracao": i,
-            "a": a,
-            "b": b,
-            "x": c,
-            "f(a)": fa,
-            "f(b)": fb,
-            "f(x)": fc
-        })
+        # critério de parada
+        if abs(fc) < tol or (b - a) / 2 < tol:
+            return c
 
-        # Testes de parada
-        if abs(fc) < tolerancia or abs(b - a) / 2 < tolerancia:
-            return {
-                "convergiu": True,
-                "raiz": c,
-                "iteracoes": i,
-                "historico": historico
-            }
-
-        # Atualização do intervalo
+        # atualiza intervalo
         if fa * fc < 0:
             b = c
             fb = fc
@@ -52,11 +53,6 @@ def bissecao(f, a, b, tolerancia=1e-6, max_iteracoes=100):
             a = c
             fa = fc
 
-    # Se não convergiu
-    return {
-        "convergiu": False,
-        "raiz": (a + b) / 2,
-        "iteracoes": max_iteracoes,
-        "historico": historico,
-        "mensagem": "Número máximo de iterações atingido."
-    }
+    # se estourar o número máximo de iterações,
+    # devolve o meio do último intervalo
+    return (a + b) / 2

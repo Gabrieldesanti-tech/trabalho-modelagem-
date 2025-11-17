@@ -1,17 +1,11 @@
-"""
-Módulo para cálculo de derivadas numéricas.
-"""
+def derivada_numerica(f, x, h=1e-6):
+    """
+    Derivada numérica usando diferença central:
+        f'(x) ≈ (f(x + h) - f(x - h)) / (2h)
 
-def derivada_numerica(f, x, h=1e-7):
+    - f: função Python que recebe x e retorna f(x)
+    - x: ponto onde quer a derivada
+    - h: passo pequeno
     """
-    Calcula a derivada numérica de uma função em um ponto usando diferenças finitas.
-    
-    Parâmetros:
-    f: função para calcular a derivada
-    x: ponto onde calcular a derivada
-    h: tamanho do passo para diferença finita
-    
-    Retorna:
-    float: valor da derivada no ponto x
-    """
-    return (f(x + h) - f(x)) / h
+    return (f(x + h) - f(x - h)) / (2 * h)
+# MÉTODO DA DERIVADA
